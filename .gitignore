@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+*.egg-info/
+
+# Generated figures (reproducible from scripts + committed CSVs)
+figures/
+
+# Note: results/*.csv (raw results) ARE versioned for reproducibility (enunciado)
