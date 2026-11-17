@@ -1,0 +1,13 @@
+master_seed: 20261116
+n_bits: 100000
+n_reps: 5
+ebn0_db: [0, 2, 4, 6, 8, 10, 12, 14]
+message: "Redes de Computadores - UNISINOS - Trabalho II"
+modulations: ["BPSK", "QPSK", "16-QAM"]
+line_codes: ["manchester", "ami"]
+channels: ["awgn", "burst"]
+use_hamming_options: [false, true]
+burst:
+  burst_prob: 0.05
+  burst_len: 20
+  burst_factor: 10.0
