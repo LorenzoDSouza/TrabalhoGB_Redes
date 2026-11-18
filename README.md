@@ -1,5 +1,9 @@
 # Simulador de Transmissão Digital
 
+## Vídeo
+
+<!-- adicionar o link do vídeo de apresentação -->
+
 Trabalho GB — Redes de Computadores (UNISINOS)
 
 ## Objetivo
@@ -114,9 +118,6 @@ python3 -m pytest
 
 ## Codificação de linha × codificação de canal
 
-Embora ambas tenham a palavra "codificação", elas atuam em camadas e com
-objetivos diferentes:
-
 - **Codificação de linha** (ex.: Manchester, AMI) transforma a sequência de
   bits em um **sinal físico** adequado ao meio de transmissão em banda-base. Os
   objetivos são elétricos/de sincronização: garantir transições suficientes
@@ -138,23 +139,35 @@ amostras do sinal, enquanto o pipeline de modulação pode (opcionalmente)
 aplicar Hamming(7,4) antes da modulação, permitindo comparar diretamente o
 ganho de codificação de canal.
 
-## Resultados e discussão
-
-A tabela de trade-off (AWGN, sem Hamming) resume a tensão fundamental entre
-eficiência espectral e robustez: modulações de ordem mais alta transmitem mais
-bits por símbolo (maior eficiência espectral) ao custo de uma BER maior para um
-mesmo Eb/N0. BPSK e QPSK têm desempenho de BER essencialmente idêntico em
-função de Eb/N0, mas QPSK dobra a eficiência espectral; 16-QAM dobra novamente
-a eficiência, porém exige um Eb/N0 bem maior para atingir a mesma BER.
-
-<!-- preencher após rodar os experimentos: colar as figuras geradas em figures/
-     e discutir as curvas BER × Eb/N0 (AWGN vs burst, com vs sem Hamming) e a
-     tabela de trade-off eficiência espectral × BER -->
-
 ## Divisão de responsabilidades da dupla
 
-<!-- Integrante A: ... / Integrante B: ... -->
+O trabalho foi dividido por pipeline, de modo que cada integrante é dono de
+uma das cadeias de transmissão (dos conceitos à implementação), com Carlos
+também responsável pela integração do código e pela apresentação, e Lorenzo
+pelo vídeo de demonstração e pela validação dos resultados.
 
-## Vídeo
+### Carlos Wendling — Pipeline de codificação de linha (banda-base)
 
-<!-- adicionar o link do vídeo de apresentação -->
+- **Codificação de linha:** Manchester (`0→[0,1]`, `1→[1,0]`, 2 amostras/bit,
+  recuperação de clock) e AMI (`0→0`, `1→±1` alternando, sem componente DC) —
+  módulo `src/line_coding.py`.
+- Pesquisa e justificativa teórica dos códigos de linha (sincronismo, espectro,
+  ausência de redundância de correção) e do pipeline banda-base, incluindo como
+  o ruído é aplicado diretamente às amostras do sinal.
+- **Integração das pesquisas no código:** junção dos módulos dos dois
+  integrantes em `src/pipeline.py`, `src/experiment.py` e `main.py`, garantindo
+  interfaces consistentes e a varredura reprodutível.
+- **Construção da apresentação** (slides) do trabalho.
+
+### Lorenzo Kirst — Pipeline de modulação (banda-passante)
+
+- **Modulações:** BPSK, QPSK e 16-QAM com mapeamento Gray e energia média
+  unitária — módulo `src/modulation.py`.
+- **Codificação de canal:** Hamming(7,4) com correção de 1 bit/bloco (R = 4/7)
+  — módulo `src/channel_coding.py` — e a comparação com/sem Hamming no pipeline
+  de modulação.
+- Pesquisa e justificativa teórica das modulações de ordem crescente, do
+  trade-off eficiência espectral × BER e das curvas teóricas de referência.
+- **Validação dos resultados** das duas pipelines: conferência das curvas
+  BER × Eb/N0, do teste de consistência e da coerência com a teoria.
+- **Vídeo de demonstração** do simulador.
