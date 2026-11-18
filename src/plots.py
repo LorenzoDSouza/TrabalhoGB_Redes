@@ -32,15 +32,29 @@ def plot_ber_curves(csv_path, out_dir, experiment, ch, use_hamming=None):
     agg = _aggregate(rows, experiment, ch, use_hamming)
     labels = sorted({k[0] for k in agg})
     fig, ax = plt.subplots()
+    theory_plotted = False
     for label in labels:
         pts = sorted((e, agg[(label, e)]) for (lb, e) in agg if lb == label)
-        x = [e for e, _ in pts]
-        mean = [np.mean(v) for _, v in pts]
-        std = [np.std(v) for _, v in pts]
-        ax.errorbar(x, mean, yerr=std, marker="o", capsize=3, label=label)
+        # BER=0 (zero erros no n_bits usado) não tem representação em escala
+        # log — omitimos esses pontos da curva simulada.
+        sim = [(e, np.mean(v), np.std(v)) for e, v in pts if np.mean(v) > 0]
+        if sim:
+            xs = [e for e, _, _ in sim]
+            mean = np.array([m for _, m, _ in sim])
+            std = np.array([s for _, _, s in sim])
+            # Barra de erro assimétrica em escala log: a metade inferior é
+            # limitada a, no máximo, meia década abaixo da média (fator ~0.3).
+            floor = mean * 0.3
+            lower = np.minimum(std, mean - floor)
+            ax.errorbar(xs, mean, yerr=[lower, std], marker="o", capsize=3,
+                        label=f"{label} (simulado)")
         if experiment == "modulation":
-            xt = np.linspace(min(x), max(x), 100)
-            ax.plot(xt, metrics.theoretical_ber(label, xt), "--", alpha=0.5)
+            x_all = [e for e, _ in pts]
+            xt = np.linspace(min(x_all), max(x_all), 100)
+            ax.plot(xt, metrics.theoretical_ber(label, xt), "--",
+                    color="black", alpha=0.5,
+                    label="teórica (AWGN)" if not theory_plotted else None)
+            theory_plotted = True
     ax.set_yscale("log")
     ax.set_xlabel("Eb/N0 (dB)")
     ax.set_ylabel("BER")
