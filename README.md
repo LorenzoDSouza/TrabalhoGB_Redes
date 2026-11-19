@@ -2,7 +2,7 @@
 
 ## Vídeo
 
-<!-- adicionar o link do vídeo de apresentação -->
+[![Assista no YouTube](https://youtu.be/w2GqteMh-iI)](https://youtu.be/w2GqteMh-iI)
 
 Trabalho GB — Redes de Computadores (UNISINOS)
 
