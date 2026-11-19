@@ -1,5 +1,9 @@
 # Simulador de Transmissão Digital
 
+## Apresentação
+
+https://canva.link/j1jjo8amavdqkql
+
 ## Vídeo
 
 [![Assista no YouTube](https://youtu.be/w2GqteMh-iI)](https://youtu.be/w2GqteMh-iI)
